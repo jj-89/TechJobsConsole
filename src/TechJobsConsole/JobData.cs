@@ -2,8 +2,10 @@
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Linq;
+using System;
 
-namespace TechJobsConsole
+namespace TechJobsConsole 
 {
     class JobData
     {
@@ -35,6 +37,7 @@ namespace TechJobsConsole
                     values.Add(aValue);
                 }
             }
+            values.Sort();
             return values;
         }
 
@@ -49,13 +52,33 @@ namespace TechJobsConsole
             {
                 string aValue = row[column];
 
-                if (aValue.Contains(value))
+                if (aValue.ToLower().Contains(value.ToLower()))
                 {
                     jobs.Add(row);
                 }
             }
-
             return jobs;
+        }
+
+        public static List<Dictionary<string, string>> FindByValue(string searchTerms)
+        {
+            LoadData();
+
+            List<Dictionary<string, string>> results = new List<Dictionary<string, string>>();
+
+
+            foreach (Dictionary<string, string> job in AllJobs)
+            {
+                foreach (KeyValuePair<string, string> item in job)
+                {
+                    if (item.Value.ToLower().Contains(searchTerms.ToLower()))
+                    {
+                        results.Add(job);
+                        break;
+                    }
+                }
+            }
+            return results;
         }
 
         /*
